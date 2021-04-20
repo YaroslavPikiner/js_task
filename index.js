@@ -9,7 +9,7 @@ function MyArray() {
   });
 }
 
-MyArray.prototype.push = function () {
+MyArray.prototype.pushsing = function () {
   if (arguments) {
     for (let i = 0; i < arguments.length; i++) {
       this[this.length] = arguments[i];
@@ -30,8 +30,17 @@ MyArray.prototype.forEach = function (callback,thisArg) {
   }
 };
 
+MyArray.prototype.maps = function(callback, thisArg) {
+  let res = []
+  for(let i = 0; i < this.length; i++) {
+    res.push(callback.call(thisArg, this[i], [i], this))
+  }
+  return res;
+}
+
+
 let array = new MyArray(122, 21, 2, 3, 5);
-array.push(10000);
-array.forEach((item) => {
+// array.push(10000);
+array.maps((item) => {
   return console.log(item);
 });
