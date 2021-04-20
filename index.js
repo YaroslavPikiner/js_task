@@ -24,23 +24,36 @@ MyArray.prototype.pushsing = function () {
 //   return value;
 // };
 
-MyArray.prototype.forEach = function (callback,thisArg) {
+MyArray.prototype.forEach = function (callback, thisArg) {
   for (i = 0; i < this.length; i++) {
-    callback.call(thisArg, this[i], [i], this) 
+    callback.call(thisArg, this[i], [i], this);
   }
 };
 
-MyArray.prototype.maps = function(callback, thisArg) {
-  let res = []
-  for(let i = 0; i < this.length; i++) {
-    res.push(callback.call(thisArg, this[i], [i], this))
+MyArray.prototype.map = function (callback, thisArg) {
+  let res = [];
+  for (let i = 0; i < this.length; i++) {
+    res.push(callback.call(thisArg, this[i], [i], this));
   }
   return res;
-}
+};
 
+MyArray.prototype.filter = function (callback, thisArg) {
+  let res = [];
+  for (i = 0; i < this.length; i++) {
+    if (callback.call(thisArg, this[i], [i], this)) {
+      push(res, thisArg);
+    }
+  }
+  return res;
+};
 
 let array = new MyArray(122, 21, 2, 3, 5);
 // array.push(10000);
-array.maps((item) => {
+array.map((item) => {
   return console.log(item);
 });
+
+array.filter(item => {
+  return console.log(item !== 21)
+}) 
