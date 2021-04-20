@@ -1,21 +1,37 @@
 function MyArray() {
-  this.myPush = function (value) {
-    return (this[this.length++] = value);
-  };
-  this.myPop = function (value) {
-    return this.splice(this.length - 1, 1);
-  };
+  for (let i = 0; i < arguments.length; i++) {
+    this[i] = arguments[i];
+  }
+  Object.defineProperty(this, "length", {
+    get: function getLength() {
+      return Object.keys(this).length;
+    },
+  });
 }
 
-MyArray.prototype = Array.prototype;
-const collection = new MyArray();
+MyArray.prototype.push = function () {
+  if (arguments) {
+    for (let i = 0; i < arguments.length; i++) {
+      this[this.length] = arguments[i];
+    }
+  }
+  return this.length;
+};
 
-collection.myPush(56); // this is not working.
-collection.myPush("2");
-collection.myPush(true);
-collection.myPush(NaN);
-collection.myPop();
-collection.myPop();
-collection.myPop();
+// MyArray.prototype.pops = function (array) {
+//   const value = this.array[this.array.length - 1];
+//   this.array.length = this.length - 1;
+//   return value;
+// };
 
-console.log(collection); // Array { '0': 56, '1': 2, myPush: [Function (anonymous)], length: 2 }
+MyArray.prototype.forEach = function (callback,thisArg) {
+  for (i = 0; i < this.length; i++) {
+    callback.call(thisArg, this[i], [i], this) 
+  }
+};
+
+let array = new MyArray(122, 21, 2, 3, 5);
+array.push(10000);
+array.forEach((item) => {
+  return console.log(item);
+});
