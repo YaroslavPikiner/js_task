@@ -46,7 +46,6 @@ MyArray.prototype.pop = function () {
   const val = this[this.length - 1];
   console.log(val);
   this.length = this.length - 1;
-  remove;
   return val;
 };
 
