@@ -42,7 +42,7 @@ MyArray.prototype.filter = function (callback, thisArg) {
   let res = [];
   for (i = 0; i < this.length; i++) {
     if (callback.call(thisArg, this[i], [i], this)) {
-      push(res, thisArg);
+      res.push(this[i]);
     }
   }
   return res;
@@ -54,6 +54,6 @@ array.map((item) => {
   return console.log(item);
 });
 
-array.filter(item => {
-  return console.log(item !== 21)
-}) 
+array.filter((item) => {
+  return item < 25;
+})
