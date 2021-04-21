@@ -44,31 +44,30 @@ MyArray.prototype.filter = function (callback, thisArg) {
 
 MyArray.prototype.pop = function () {
   const val = this[this.length - 1];
-  console.log(val);
-  this.length = this.length - 1;
+  delete this[this.length - 1]
   return val;
 };
 
-MyArray.prototype.reduce = function (callback, thisArg, initVal) {
+MyArray.prototype.reduce = function (callback, ...args, initVal) {
   let acc = initVal;
   let startIndex = 0;
 
   if (initVal === undefined) {
-    acc = thisArg[0];
+    acc = args[0];
     startIndex = 1;
   }
 
   for (let index = startIndex; index < this.length; index++) {
     const val = this[index];
-    acc = callback(acc, val, [index], thisArg);
+    acc = callback(acc, val, [index], ...args);
   }
 
   return acc;
 };
 
 let array = new MyArray(122, 21, 2, 3, 5);
-// array.pop();
-// console.log(array);
+array.pop();
+console.log(array);
 // array.map((item) => {
 //   return console.log(item);
 // });
