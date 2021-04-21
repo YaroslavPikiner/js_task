@@ -112,14 +112,23 @@ MyArray.prototype.sort = function (callback = this.sortedFunc) {
   return this;
 };
 
-let array = new MyArray(1,2,3,4);
+
+MyArray.prototype.fromTo = function() {}
+MyArray.prototype.toString = function() {
+    let result = ''
+    for(let i = 0; i < this.length; i++) {
+      result += `${this[i]},`
+    }
+    return result.substring(0, result.length - 1)
+}
+
+let array = new MyArray(2,3,4);
 
 
-console.log(array.sort((a,b) => a < b ));
-console.log(array.reduce((prev, curr) => prev + curr));
-
+// console.log(array.sort((a,b) => a < b ));
+// console.log(array.reduce((prev, curr) => prev + curr));
+console.log(array.toString());
 
 // 1 отловить empty string
-// 2 переработать reduce
-// 3 создать tostring
-4 
+// 2 создать tostring
+// 3 создать from to
