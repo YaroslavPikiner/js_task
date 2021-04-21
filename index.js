@@ -48,21 +48,17 @@ MyArray.prototype.pop = function () {
   return val;
 };
 
-MyArray.prototype.reduce = function (callback, ...args, initVal) {
-  let acc = initVal;
-  let startIndex = 0;
+MyArray.prototype.reduce = function (callback, result) {
+  let i = 0;
+  if(arguments.length < 2) {
+    i = 1;
+    result = this[0];
 
-  if (initVal === undefined) {
-    acc = args[0];
-    startIndex = 1;
   }
-
-  for (let index = startIndex; index < this.length; index++) {
-    const val = this[index];
-    acc = callback(acc, val, [index], ...args);
+  for(; i < this.length; i++) {
+    result = callback(result, this[i], i, this);
   }
-
-  return acc;
+  return result;
 };
 
 let array = new MyArray(122, 21, 2, 3, 5);
@@ -81,3 +77,22 @@ array.reduce(function (sum, current) {
   console.log(current, 'curr');
   return sum + current;
 }, 1);
+
+
+// function reduce(array, callback, initValue) {
+//   const { length } = array;
+ 
+//   let acc = initValue;
+//   let startAtIndex = 0;
+ 
+//   if (initValue === undefined) {
+//     acc = array[0];
+//     startAtIndex = 1;
+//   }
+ 
+//   for (let index = startAtIndex; index < length; index += 1) {
+//     const value = array[index];
+//     acc = callback(acc, value, index, array);
+//   }
+ 
+//   return acc;
