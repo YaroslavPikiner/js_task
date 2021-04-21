@@ -2,7 +2,7 @@ function MyArray() {
   for (let i = 0; i < arguments.length; i++) {
     this[i] = arguments[i];
   }
-  Object.defineProperty(this, 'length', {
+  Object.defineProperty(this, "length", {
     get: function getLength() {
       return Object.keys(this).length;
     },
@@ -44,55 +44,55 @@ MyArray.prototype.filter = function (callback, thisArg) {
 
 MyArray.prototype.pop = function () {
   const val = this[this.length - 1];
-  delete this[this.length - 1]
+  delete this[this.length - 1];
   return val;
 };
 
 MyArray.prototype.reduce = function (callback, result) {
   let i = 0;
-  if(arguments.length < 2) {
+  if (arguments.length < 2) {
     i = 1;
     result = this[0];
-
   }
-  for(; i < this.length; i++) {
+  for (; i < this.length; i++) {
     result = callback(result, this[i], i, this);
   }
   return result;
 };
 
-let array = new MyArray(122, 21, 2, 3, 5);
-array.pop();
-console.log(array);
-// array.map((item) => {
-//   return console.log(item);
-// });
 
-// array.filter((item) => {
-//   return item < 25 ? console.log(item) : console.log('false')
+// test sort
+MyArray.prototype.sort = function () {
+
+  for (let i = 1; i < this.length; i++) {
+
+    for (let j = i; j > 0; j--) {
+
+      if (this[j] < this[j - 1]) {
+        const temp = this[j];
+        this[j] = this[j - 1];
+        this[j - 1] = temp;
+      } else if (this[j] > this[j - 1]) {
+
+        const temp = this[j];
+
+        this[j] = this[j - 1];
+
+        this[j - 1] = temp;
+
+      } else {
+        break;
+      }
+    }
+  }
+  return this;
+};
+
+let array = new MyArray(122, 21, 2, 3, 5);
+
+// array.reduce((prev,curr) => {
+//   console.log(prev, 'prev')
+//   console.log(curr, 'curr')
 // })
 
-array.reduce(function (sum, current) {
-  console.log(sum, 'sum');
-  console.log(current, 'curr');
-  return sum + current;
-}, 1);
-
-
-// function reduce(array, callback, initValue) {
-//   const { length } = array;
- 
-//   let acc = initValue;
-//   let startAtIndex = 0;
- 
-//   if (initValue === undefined) {
-//     acc = array[0];
-//     startAtIndex = 1;
-//   }
- 
-//   for (let index = startAtIndex; index < length; index += 1) {
-//     const value = array[index];
-//     acc = callback(acc, value, index, array);
-//   }
- 
-//   return acc;
+console.log(array.sort());
