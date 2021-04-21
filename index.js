@@ -61,23 +61,28 @@ MyArray.prototype.reduce = function (callback, result) {
 };
 
 
+MyArray.prototype.sortedFunc = function(first, second) {
+  if(first > second) {
+    return 1
+  }
+
+  if(second < first) {
+    return -1
+  }
+
+  return 0
+  
+} 
 // test sort
-MyArray.prototype.sort = function () {
+MyArray.prototype.sort = function (callback = this.sortedFunc) {
 
   for (let i = 1; i < this.length; i++) {
 
     for (let j = i; j > 0; j--) {
 
-      if (this[j] < this[j - 1]) {
+      if (callback(this[j] , this[j - 1])) {
         const temp = this[j];
         this[j] = this[j - 1];
-        this[j - 1] = temp;
-      } else if (this[j] > this[j - 1]) {
-
-        const temp = this[j];
-
-        this[j] = this[j - 1];
-
         this[j - 1] = temp;
 
       } else {
@@ -88,11 +93,11 @@ MyArray.prototype.sort = function () {
   return this;
 };
 
-let array = new MyArray(122, 21, 2, 3, 5);
+let array = new MyArray(1,2,23,2,3,34,4576,56,8567,2,43,456,123,41,45,346,435,645,6);
 
 // array.reduce((prev,curr) => {
 //   console.log(prev, 'prev')
 //   console.log(curr, 'curr')
 // })
 
-console.log(array.sort());
+console.log(array.sort((a,b) => a < b ));
