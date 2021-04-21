@@ -1,5 +1,8 @@
 function MyArray() {
   for (let i = 0; i < arguments.length; i++) {
+    if(arguments[i] === undefined) {
+      console.log('попався')
+    }
     this[i] = arguments[i];
   }
   Object.defineProperty(this, "length", {
@@ -48,17 +51,34 @@ MyArray.prototype.pop = function () {
   return val;
 };
 
-MyArray.prototype.reduce = function (callback, result) {
-  let i = 0;
-  if (arguments.length < 2) {
-    i = 1;
-    result = this[0];
-  }
-  for (; i < this.length; i++) {
-    result = callback(result, this[i], i, this);
-  }
-  return result;
-};
+// MyArray.prototype.reduce = function (callback, result) {
+//   let i = 0;
+//   if (arguments.length < 2) {
+//     i = 1;
+//     result = this[0];
+//   }
+//   for (; i < this.length; i++) {
+//     result = callback(result, this[i], i, this);
+//   }
+//   return result;
+// };
+
+
+MyArray.prototype.reduce = function(callback, initVal) {
+  let acc = initVal;
+ let startAtIndex = 0;
+
+ if (initVal === undefined) {
+   acc = this[0];
+   startAtIndex = 1;
+ }
+
+ for (let index = startAtIndex; index < this.length; index += 1) {
+   acc = callback(acc, this[index], index, this);
+ }
+
+ return acc;
+}
 
 
 MyArray.prototype.sortedFunc = function(first, second) {
@@ -84,7 +104,6 @@ MyArray.prototype.sort = function (callback = this.sortedFunc) {
         const temp = this[j];
         this[j] = this[j - 1];
         this[j - 1] = temp;
-
       } else {
         break;
       }
@@ -93,11 +112,14 @@ MyArray.prototype.sort = function (callback = this.sortedFunc) {
   return this;
 };
 
-let array = new MyArray(1,2,23,2,3,34,4576,56,8567,2,43,456,123,41,45,346,435,645,6);
+let array = new MyArray(1,2,3,4);
 
-// array.reduce((prev,curr) => {
-//   console.log(prev, 'prev')
-//   console.log(curr, 'curr')
-// })
 
 console.log(array.sort((a,b) => a < b ));
+console.log(array.reduce((prev, curr) => prev + curr));
+
+
+// 1 отловить empty string
+// 2 переработать reduce
+// 3 создать tostring
+4 
