@@ -18,7 +18,6 @@ MyArray.prototype[Symbol.iterator] = function () {
   console.log(this, "this");
   return {
     next() {
-
       if (current === undefined) {
         current = last;
       }
@@ -37,13 +36,19 @@ MyArray.prototype[Symbol.iterator] = function () {
   };
 };
 
-MyArray.prototype.pushsing = function () {
+MyArray.prototype.push = function () {
   if (arguments) {
     for (let i = 0; i < arguments.length; i++) {
       this[this.length] = arguments[i];
     }
   }
   return this.length;
+};
+
+MyArray.prototype.pop = function () {
+  const val = this[this.length - 1];
+  delete this[this.length - 1];
+  return val;
 };
 
 MyArray.prototype.forEach = function (callback, thisArg) {
@@ -70,12 +75,6 @@ MyArray.prototype.filter = function (callback, thisArg) {
   return res;
 };
 
-MyArray.prototype.pop = function () {
-  const val = this[this.length - 1];
-  delete this[this.length - 1];
-  return val;
-};
-
 MyArray.prototype.reduce = function (callback, initVal) {
   let acc = initVal;
   let startAtIndex = 0;
@@ -84,11 +83,9 @@ MyArray.prototype.reduce = function (callback, initVal) {
     acc = this[0];
     startAtIndex = 1;
   }
-
   for (let index = startAtIndex; index < this.length; index += 1) {
     acc = callback(acc, this[index], index, this);
   }
-
   return acc;
 };
 
@@ -101,43 +98,40 @@ MyArray.prototype.sortedFunc = function (first, second) {
   }
   return 0;
 };
-// test sort
+
 MyArray.prototype.sort = function (callback = this.sortedFunc) {
   for (let i = 1; i < this.length; i++) {
     for (let j = i; j > 0; j--) {
       if (callback(this[j], this[j - 1])) {
         const temp = this[j];
+
         this[j] = this[j - 1];
         this[j - 1] = temp;
       } else {
         break;
-      }
-    }
-  }
+      };
+    };
+  };
   return this;
 };
-
-
 
 MyArray.prototype.toString = function () {
   let result = "";
   for (let i = 0; i < this.length; i++) {
     result += `${this[i]},`;
-  }
+  };
   return result.substring(0, result.length - 1);
 };
 
-let array = new MyArray(1, 2, 3, 4, 5,1,3,123,2,53,65,678,689);
+MyArray.prototype.from = function (array, mapFn, thisArg) {
+  let result = new MyArray();
 
-let arr = [...array];
-console.log(arr);
-
-// array.map((item,i) => {
-//   console.log(item + '-' + i)
-// })
-
-// console.log(array.sort((a,b) => a < b ));
-// console.log(array.from());
-
-// 3 создать from to
-MyArray.prototype.from = function () {};
+  for (let i = 0; i < array.length; i++) {
+    if (mapFn) {
+      result.push(mapFn.call(thisArg, array[i], i, thisArg));
+    };
+    result.push(array[i]);
+  };
+  return result;
+};
+let array = new MyArray();
