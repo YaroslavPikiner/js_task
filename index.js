@@ -1,21 +1,19 @@
-function MyArray() {
-  for (let i = 0; i < arguments.length; i++) {
-    if (arguments[i] === undefined) {
-      console.log("попався");
+function MyArray(...args) {
+  if (args.length === 1 && typeof args[0] === 'number') {
+    this.length = args[0];
+  } else {
+    this.length = args.length;
+
+    for (let i = 0; i < args.length; i++) {
+      this[i] = args[i];
     }
-    this[i] = arguments[i];
   }
-  Object.defineProperty(this, "length", {
-    get: function getLength() {
-      return Object.keys(this).length;
-    },
-  });
 }
 
 MyArray.prototype[Symbol.iterator] = function () {
   let current = 0;
   let last = this.length - 1;
-  console.log(this, "this");
+
   return {
     next() {
       if (current === undefined) {
@@ -46,30 +44,50 @@ MyArray.prototype.push = function () {
 };
 
 MyArray.prototype.pop = function () {
+  if (this.length === 0) {
+    return;
+  }
+
   const val = this[this.length - 1];
   delete this[this.length - 1];
   return val;
 };
 
 MyArray.prototype.forEach = function (callback, thisArg) {
+  if (typeof callback !== 'function') {
+    console.error(`${callback} is not a function`);
+  }
+
   for (i = 0; i < this.length; i++) {
-    callback.call(thisArg, this[i], [i], this);
+    callback.call(thisArg, this[i], i, this);
   }
 };
 
 MyArray.prototype.map = function (callback, thisArg) {
-  let res = new MyArray();
-  for (let i = 0; i < this.length; i++) {
-    res = callback.call(thisArg, this[i], [i], this);
+  if (typeof callback !== 'function') {
+    console.error(`${callback} is not a function`);
   }
-  return res;
+
+  const resultArray = new MyArray();
+
+  for (let i = 0; i < this.length; i++) {
+    resultArray[i] = callback.call(thisArg, this[i], i, this);
+    resultArray.length += 1;
+  }
+
+  return resultArray;
 };
 
 MyArray.prototype.filter = function (callback, thisArg) {
   let res = new MyArray();
+
+  if (typeof callback !== 'function') {
+    console.error(`${callback} is not a function`);
+  }
+
   for (i = 0; i < this.length; i++) {
-    if (callback.call(thisArg, this[i], [i], this)) {
-      res.add(this[i]);
+    if (callback.call(thisArg, this[i], i, this)) {
+      res.push(this[i]);
     }
   }
   return res;
@@ -79,12 +97,16 @@ MyArray.prototype.reduce = function (callback, initVal) {
   let acc = initVal;
   let startAtIndex = 0;
 
+  if (typeof callback !== 'function') {
+    console.error(`${callback} is not a function`);
+  }
+
   if (initVal === undefined) {
     acc = this[0];
     startAtIndex = 1;
   }
-  for (let index = startAtIndex; index < this.length; index += 1) {
-    acc = callback(acc, this[index], index, this);
+  for (let i = startAtIndex; i < this.length; i++) {
+    acc = callback(acc, this[index], i, this);
   }
   return acc;
 };
@@ -101,37 +123,50 @@ MyArray.prototype.sortedFunc = function (first, second) {
 
 MyArray.prototype.sort = function (callback = this.sortedFunc) {
   for (let i = 1; i < this.length; i++) {
+   
     for (let j = i; j > 0; j--) {
+      
       if (callback(this[j], this[j - 1])) {
         const temp = this[j];
-
         this[j] = this[j - 1];
         this[j - 1] = temp;
       } else {
         break;
-      };
-    };
-  };
+      }
+    }
+  }
   return this;
 };
 
 MyArray.prototype.toString = function () {
-  let result = "";
+  let result = '';
   for (let i = 0; i < this.length; i++) {
     result += `${this[i]},`;
-  };
+  }
   return result.substring(0, result.length - 1);
 };
 
-MyArray.prototype.from = function (array, mapFn, thisArg) {
-  let result = new MyArray();
+MyArray.from = function (arrayLike, mapFn, thisArg) {
+  const resultArray = new MyArray();
+  let callback = null;
 
-  for (let i = 0; i < array.length; i++) {
-    if (mapFn) {
-      result.push(mapFn.call(thisArg, array[i], i, thisArg));
-    };
-    result.push(array[i]);
-  };
-  return result;
+  if (mapFn) {
+    callback = mapFn;
+
+    for (let i = 0; i < arrayLike.length; i++) {
+      resultArray[i] = mapFn.call(thisArg, arrayLike[i]);
+      resultArray.length += 1;
+    }
+  } else {
+
+    for (let i = 0; i < arrayLike.length; i++) {
+      resultArray[i] = arrayLike[i];
+      resultArray.length += 1;
+    }
+  }
+
+  return resultArray;
 };
-let array = new MyArray();
+
+// expected output: Array ["f", "o", "o"]
+
