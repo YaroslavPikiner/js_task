@@ -3,7 +3,6 @@ function MyArray(...args) {
 		this.length = args[0];
 	} else {
 		this.length = args.length;
-
 		for (let i = 0; i < args.length; i++) {
 			this[i] = args[i];
 		}
@@ -101,15 +100,15 @@ MyArray.prototype.reduce = function (callback, initValue) {
 	}
 
 	let acc = initValue;
-   
+
 	if (initValue === undefined) {
-	  acc = this[0];
+		acc = this[0];
 	}
-   
+
 	for (let i = 1; i < this.length; i++) {
-	  acc = callback(acc, this[i], i, this);
+		acc = callback(acc, this[i], i, this);
 	}
-   
+
 	return acc;
 };
 
@@ -145,7 +144,6 @@ MyArray.prototype.toString = function () {
 	}
 	return result;
 };
-
 
 MyArray.from = function (arrayLike, mapFn, thisArg) {
 	const resultArray = new MyArray();
