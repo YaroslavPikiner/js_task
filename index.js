@@ -80,7 +80,7 @@ MyArray.prototype.map = function (callback, thisArg) {
 };
 
 MyArray.prototype.filter = function (callback, thisArg) {
-	let res = new MyArray();
+	const res = new MyArray();
 
 	if (typeof callback !== 'function') {
 		console.error(`${callback} is not a function`);
@@ -148,19 +148,15 @@ MyArray.prototype.toString = function () {
 MyArray.from = function (arrayLike, mapFn, thisArg) {
 	const resultArray = new MyArray();
 	let callback = null;
-
-	if (mapFn) {
-		callback = mapFn;
-
-		for (let i = 0; i < arrayLike.length; i++) {
-			resultArray[i] = mapFn.call(thisArg, arrayLike[i]);
-			resultArray.length += 1;
+	let i = 0;
+	for (let value of arrayLike) {
+		if (mapFn) {
+			callback = mapFn;
+			resultArray.push(callback.call(thisArg, value, i, arrayLike));
+		} else {
+			resultArray.push(value);
 		}
-	} else {
-		for (let i = 0; i < arrayLike.length; i++) {
-			resultArray[i] = arrayLike[i];
-			resultArray.length += 1;
-		}
+		i++;
 	}
 
 	return resultArray;
